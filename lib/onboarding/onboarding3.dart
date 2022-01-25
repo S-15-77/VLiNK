@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:project_app/Register/Register.dart';
 
 class Onboarding3 extends StatefulWidget {
   @override
@@ -149,7 +150,13 @@ class _Onboarding3State extends State<Onboarding3> {
                             fontWeight: FontWeight.w700, fontSize: 18),
                       ),
                       onPressed: () {
-                        print("Register");
+                        //print("Register");
+                        Navigator.push(
+                          (context),
+                          MaterialPageRoute(
+                            builder: (context) => Register(),
+                          ),
+                        );
                       },
                       style: ElevatedButton.styleFrom(
                         primary: Colors.black,
