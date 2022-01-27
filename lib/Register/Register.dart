@@ -11,11 +11,14 @@ enum Reg {
 enum Otp { noOtp, getOtp }
 
 class Register extends StatefulWidget {
+  Reg? selectedButton;
+  Register({this.selectedButton});
   @override
-  _RegisterState createState() => _RegisterState();
+  _RegisterState createState() => _RegisterState(selectedButton);
 }
 
 class _RegisterState extends State<Register> {
+  _RegisterState(this.selectedButton);
   Reg? selectedButton;
   Otp? otpVisible;
 
@@ -33,9 +36,11 @@ class _RegisterState extends State<Register> {
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
                     Image.asset(
-                      'assests/images/register.png',
-                      height: 116,
-                      width: 235,
+                      selectedButton == Reg.Register
+                          ? 'assests/images/reg.png'
+                          : 'assests/images/login.png',
+                      height: selectedButton == Reg.Register ? 116 : 145,
+                      width: selectedButton == Reg.Register ? 235 : 186,
                     )
                   ],
                 ),

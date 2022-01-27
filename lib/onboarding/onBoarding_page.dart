@@ -94,16 +94,17 @@ class OnBoardingPage extends StatelessWidget {
                 }),
                 onPressed: () {
                   if (_controller.isLastPage) {
-                    print("is last");
+                    //print("is last");
                     Navigator.push(
                       (context),
                       MaterialPageRoute(
-                        builder: (context) => Register(),
+                        builder: (context) =>
+                            Register(selectedButton: Reg.Login),
                       ),
                     );
                   } else {
                     _controller.pageController.jumpToPage(2);
-                    print("not last");
+                    // print("not last");
                   }
                 },
                 style: ElevatedButton.styleFrom(
@@ -130,7 +131,9 @@ class OnBoardingPage extends StatelessWidget {
                     Navigator.push(
                       (context),
                       MaterialPageRoute(
-                        builder: (context) => Register(),
+                        builder: (context) => Register(
+                          selectedButton: Reg.Register,
+                        ),
                       ),
                     );
                   } else {
