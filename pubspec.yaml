@@ -30,6 +30,12 @@ dependencies:
   cupertino_icons: ^1.0.2
   animated_splash_screen: ^1.1.0
   google_fonts: ^2.2.0
+<<<<<<< Updated upstream
+=======
+  flutter_otp_text_field: ^0.0.1
+  get: ^3.26.0
+
+>>>>>>> Stashed changes
 
 
 
