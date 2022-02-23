@@ -1,3 +1,5 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:project_app/Register/Otp.dart';
@@ -16,6 +18,50 @@ class _MainRegisterState extends State<MainRegister> {
     name!.text;
     email!.text;
     phoneno!.text;
+  }
+
+  Future login() async {
+    final FirebaseAuth _auth = FirebaseAuth.instance;
+    var phoneNumber = '+91 ' + phoneno!.text;
+
+    //first we will check if a user with this cell number exists
+    var isValidUser = false;
+    var number = phoneno!.text;
+
+    await FirebaseFirestore.instance
+        .collection("Users")
+        .doc(FirebaseAuth.instance.currentUser!.uid)
+        .collection("details")
+        .where('PhoneNO', isEqualTo: number)
+        .get()
+        .then((result) {
+      if (result.docs.length > 0) {
+        isValidUser = true;
+      }
+    });
+
+    if (isValidUser) {
+      //non valid user
+
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text('User Already Exist'),
+          behavior: SnackBarBehavior.floating,
+        ),
+      );
+    } else {
+      showDialog(
+          context: (context),
+          builder: (BuildContext context) {
+            return AlertDialog(
+              content: OtpRequest(
+                phone: phoneno!.text.toString(),
+                name: name!.text.toString(),
+                email: email!.text.toString(),
+              ),
+            );
+          });
+    }
   }
 
   Otp? otpVisible;
@@ -130,6 +176,19 @@ class _MainRegisterState extends State<MainRegister> {
           children: [
             ElevatedButton(
               onPressed: () {
+                login();
+                // showDialog(
+                //     context: (context),
+                //     builder: (BuildContext context) {
+                //       return AlertDialog(
+                //         content: OtpRequest(
+                //           phone: phoneno!.text.toString(),
+                //           name: name!.text.toString(),
+                //           email: email!.text.toString(),
+                //         ),
+                //       );
+                //     });
+
                 setState(() {
                   otpVisible = Otp.getOtp;
                 });
@@ -146,9 +205,9 @@ class _MainRegisterState extends State<MainRegister> {
           ],
         ),
         //
-        Visibility(
-          child: otpVisible == Otp.getOtp ? OtpRequest() : Container(),
-        ),
+        // Visibility(
+        //   child: otpVisible == Otp.getOtp ? OtpRequest() : Container(),
+        // ),
       ],
     );
   }

@@ -20,58 +20,63 @@ class OnBoardingPage extends StatelessWidget {
                 controller: _controller.pageController,
                 itemBuilder: (context, index) {
                   return Container(
-                    child: Column(
-                      //mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        Row(
-                          mainAxisAlignment: MainAxisAlignment.end,
-                          children: [
-                            Image.asset(
-                              'assests/images/logo.png',
-                              height: 74.0,
-                              width: 74.0,
-                            ),
-                          ],
-                        ),
-                        Text(
-                          _controller.onboardingPages[index].title,
-                          style: _controller.onboardingPages[index].titleStyle,
-                        ),
-                        SizedBox(
-                          height: 42,
-                        ),
-                        Image.asset(
-                          _controller.onboardingPages[index].images,
-                          width: _controller.onboardingPages[index].imagewidth,
-                          height:
-                              _controller.onboardingPages[index].imageheight,
-                        ),
-                        SizedBox(
-                          height: 31,
-                        ),
-                        Text(_controller.onboardingPages[index].subTitle,
-                            style: _controller
-                                .onboardingPages[index].subTitleStyle),
-                        Container(
-                          padding: EdgeInsets.all(20),
-                          child: Text(
-                            _controller.onboardingPages[index].body,
-                            style: _controller.onboardingPages[index].bodystyle,
+                    child: SingleChildScrollView(
+                      child: Column(
+                        //mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          Row(
+                            mainAxisAlignment: MainAxisAlignment.end,
+                            children: [
+                              Image.asset(
+                                'assests/images/logo.png',
+                                height: 74.0,
+                                width: 74.0,
+                              ),
+                            ],
                           ),
-                        ),
-                      ],
+                          Text(
+                            _controller.onboardingPages[index].title,
+                            style:
+                                _controller.onboardingPages[index].titleStyle,
+                          ),
+                          SizedBox(
+                            height: 42,
+                          ),
+                          Image.asset(
+                            _controller.onboardingPages[index].images,
+                            width:
+                                _controller.onboardingPages[index].imagewidth,
+                            height:
+                                _controller.onboardingPages[index].imageheight,
+                          ),
+                          SizedBox(
+                            height: 31,
+                          ),
+                          Text(_controller.onboardingPages[index].subTitle,
+                              style: _controller
+                                  .onboardingPages[index].subTitleStyle),
+                          Container(
+                            padding: EdgeInsets.all(20),
+                            child: Text(
+                              _controller.onboardingPages[index].body,
+                              style:
+                                  _controller.onboardingPages[index].bodystyle,
+                            ),
+                          ),
+                        ],
+                      ),
                     ),
                   );
                 }),
             Positioned(
               bottom: 134,
-              left: 182,
+              left: 170,
               child: Row(
                 children: List.generate(
                   _controller.onboardingPages.length,
                   (index) => Obx(() {
                     return Container(
-                      margin: EdgeInsets.all(4),
+                      margin: EdgeInsets.all(5),
                       width: 12,
                       height: 12,
                       decoration: BoxDecoration(

@@ -1,6 +1,9 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:project_app/Register/Otp.dart';
+import 'package:project_app/Home_Page/HomePage.dart';
+import 'package:project_app/Register/LoginOtp.dart';
 
 enum Otp { noOtp, getOtp }
 
@@ -15,6 +18,46 @@ class _LoginState extends State<Login> {
   TextEditingController phno = TextEditingController();
 
   Otp? otpVisible;
+
+  Future login() async {
+    //var phoneNumber = '+91 ' + phno.text;
+
+    //first we will check if a user with this cell number exists
+    var isValidUser = false;
+    var number = phno.text;
+
+    await FirebaseFirestore.instance
+        .collection("Users")
+        .doc(FirebaseAuth.instance.currentUser!.uid)
+        .collection("details")
+        .where('PhoneNO', isEqualTo: phno.text)
+        .get()
+        .then((result) {
+      if (result.docs.length > 0) {
+        isValidUser = true;
+      }
+    });
+
+    if (isValidUser) {
+      //non valid user
+
+      showDialog(
+          context: (context),
+          builder: (BuildContext context) {
+            return AlertDialog(
+              content: OtpLogin(phno.text.toString()),
+            );
+          });
+    } else {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text('Number not found, please sign up first'),
+          behavior: SnackBarBehavior.floating,
+        ),
+      );
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return Column(
@@ -58,6 +101,8 @@ class _LoginState extends State<Login> {
           children: [
             ElevatedButton(
               onPressed: () {
+                login();
+
                 setState(() {
                   otpVisible = Otp.getOtp;
                 });
@@ -72,9 +117,9 @@ class _LoginState extends State<Login> {
           ],
         ),
         //
-        Visibility(
-          child: otpVisible == Otp.getOtp ? OtpRequest() : Container(),
-        ),
+        // Visibility(
+        //   child: otpVisible == Otp.getOtp ? OtpRequest() : Container(),
+        // ),
         // SizedBox(
         //   height: 40,
         // ),

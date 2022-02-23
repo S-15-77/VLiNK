@@ -1,20 +1,20 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:pinput/pin_put/pin_put.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:project_app/Home_Page/HomePage.dart';
 
-class OtpRequest extends StatefulWidget {
+class OtpLogin extends StatefulWidget {
   String? phone;
-  String? email;
-  String? name;
-  OtpRequest({this.phone, this.email, this.name});
+
+  OtpLogin(this.phone);
   @override
-  _OtpRequestState createState() => _OtpRequestState();
+  _OtpLoginState createState() => _OtpLoginState();
 }
 
-class _OtpRequestState extends State<OtpRequest> {
+class _OtpLoginState extends State<OtpLogin> {
   late String _verificationCode;
 
   final GlobalKey<ScaffoldState> _scaffoldkey = GlobalKey<ScaffoldState>();
@@ -31,10 +31,12 @@ class _OtpRequestState extends State<OtpRequest> {
     ),
   );
 
+  bool showOtp = false;
   @override
   void initState() {
     // TODO: implement initState
     super.initState();
+    //login();
     _verifyPhone();
   }
 
@@ -71,6 +73,11 @@ class _OtpRequestState extends State<OtpRequest> {
 
   @override
   Widget build(BuildContext context) {
+    var user = FirebaseAuth.instance.currentUser;
+    CollectionReference<Map<String, dynamic>> ref = FirebaseFirestore.instance
+        .collection("Users")
+        .doc(user!.uid)
+        .collection("details");
     return Column(
       mainAxisAlignment: MainAxisAlignment.center,
       children: [
@@ -117,24 +124,17 @@ your email and phone number.''',
                           verificationId: _verificationCode, smsCode: pin))
                       .then((value) async {
                     if (value.user != null) {
-                      print("adding to db");
-
-                      var user = FirebaseAuth.instance.currentUser;
-                      CollectionReference<Map<String, dynamic>> ref =
-                          FirebaseFirestore.instance
-                              .collection("Users")
-                              .doc(user!.uid)
-                              .collection("details");
-                      ref.add({
-                        "PhoneNO": widget.phone,
-                        "Name": widget.name,
-                        "email": widget.email
-                      }).whenComplete(() => print("Added to db" + user.uid));
-
                       Navigator.pushAndRemoveUntil(
                           context,
                           MaterialPageRoute(builder: (context) => Home()),
                           (route) => false);
+                    } else {
+                      ScaffoldMessenger.of(context).showSnackBar(
+                        SnackBar(
+                          content: Text("User Not Registered"),
+                          behavior: SnackBarBehavior.floating,
+                        ),
+                      );
                     }
                   });
                 } catch (e) {
@@ -144,79 +144,11 @@ your email and phone number.''',
                 }
               },
             )),
-            // Container(
-            //   width: 60,
-            //   child: TextField(
-            //     decoration: InputDecoration(
-            //         border: OutlineInputBorder(), labelText: ' '),
-            //   ),
-            // ),
-            // Container(
-            //   width: 60,
-            //   child: TextField(
-            //     decoration: InputDecoration(
-            //         border: OutlineInputBorder(), labelText: ' '),
-            //   ),
-            // ),
-            // Container(
-            //   width: 60,
-            //   child: TextField(
-            //     decoration: InputDecoration(
-            //         border: OutlineInputBorder(), labelText: ' '),
-            //   ),
-            // ),
-            // Container(
-            //   width: 60,
-            //   child: TextField(
-            //     decoration: InputDecoration(
-            //         border: OutlineInputBorder(), labelText: ' '),
-            //   ),
-            // ),
           ],
         ),
         SizedBox(
           height: 33,
         ),
-        // Row(
-        //   mainAxisAlignment: MainAxisAlignment.center,
-        //   children: [
-        //     ElevatedButton(
-        //       onPressed: () {},
-        //       child: Text("Resend OTP"),
-        //       style: ElevatedButton.styleFrom(
-        //         shape: RoundedRectangleBorder(
-        //           borderRadius: BorderRadius.circular(10.0),
-        //         ),
-        //         side: BorderSide(
-        //           color: Colors.black,
-        //         ),
-        //         fixedSize: Size(225, 47),
-        //         primary: Colors.white,
-        //         onPrimary: Colors.black,
-        //       ),
-        //     )
-        //   ],
-        // ),
-        // SizedBox(
-        //   height: 13,
-        // ),
-        // Row(
-        //   mainAxisAlignment: MainAxisAlignment.center,
-        //   children: [
-        //     ElevatedButton(
-        //       onPressed: () {},
-        //       child: Text("Register"),
-        //       style: ElevatedButton.styleFrom(
-        //         shape: RoundedRectangleBorder(
-        //           borderRadius: BorderRadius.circular(10.0),
-        //         ),
-        //         fixedSize: Size(225, 47),
-        //         primary: Colors.black,
-        //         onPrimary: Colors.white,
-        //       ),
-        //     )
-        //   ],
-        // ),
       ],
     );
   }
